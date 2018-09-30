@@ -17,6 +17,8 @@ module.exports = function solveSudoku(matrix) {
         console.log(getCandidates(matrix));
     } while (isCandidateResolved);
 
+    console.log('Result');
+    console.log(matrix);
     return matrix;
 };
 
@@ -48,12 +50,12 @@ function setCandidateExplicitly(matrix) {
     let candidatesMatrix = getCandidates(matrix);
     let candidateSet = false;
     for (let i = 0; i < candidatesMatrix.length; i++) {
-        for (let j = 0; j < candidatesMatrix.length; j++) {
-            if (candidatesMatrix[i][j].length > 1) {
+        for (let j = 0; j < candidatesMatrix[i].length; j++) {
+            if (matrix[i][j] === 0 && candidatesMatrix[i][j].length > 0) {
                 let candidatesPool = candidatesMatrix[i][j];
                 for (let k = 0; k < candidatesPool.length; k++) {
                     matrix[i][j] = candidatesPool[k];
-                    if (hasSingleCandidates(getCandidates(matrix)) || isSolved(matrix)) {
+                    if ((hasAtLeastOneSingleCandidate(matrix)) || isSolved(matrix)) {
                         candidateSet = true;
                         break;
                     } else {
@@ -71,7 +73,8 @@ function setCandidateExplicitly(matrix) {
     }
 }
 
-function hasSingleCandidates(candidatesMatrix) {
+function hasAtLeastOneSingleCandidate(matrix) {
+    let candidatesMatrix = getCandidates(matrix);
     for (let i = 0; i < candidatesMatrix.length; i++) {
         for (let j = 0; j < candidatesMatrix[i].length; j++) {
             if (candidatesMatrix[i][j].length === 1) {
@@ -80,6 +83,18 @@ function hasSingleCandidates(candidatesMatrix) {
         }
     }
     return false;
+}
+
+function hasAtLeastOneCandidateForEachPosition(matrix) {
+    let candidatesMatrix = getCandidates(matrix);
+    for (let i = 0; i < matrix.length; i++) {
+        for (let j = 0; j < matrix[i].length; j++) {
+            if (matrix[i][j] === 0 && candidatesMatrix[i][j].length === 0) {
+                return false;
+            }
+        }
+    }
+    return true;
 }
 
 function resolveOneSingleCandidate(matrix) {
